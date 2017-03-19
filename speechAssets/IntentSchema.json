@@ -1,0 +1,86 @@
+{
+  "intents": [
+    {
+      "intent": "CalculateOneNumberIntent",
+      "slots": [
+        {
+          "name": "number",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+      "intent": "CalculateOneOperatorIntent",
+      "slots": [
+        {
+          "name": "operator",
+          "type": "OPERATOR"
+        }
+      ]
+    },
+    {
+      "intent": "CalculateNumberThenOperatorIntent",
+      "slots": [
+        {
+          "name": "number",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "operator",
+          "type": "OPERATOR"
+        }
+      ]
+    },
+    {
+      "intent": "CalculateOperatorThenNumber",
+      "slots": [
+        {
+          "name": "number",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "operator",
+          "type": "OPERATOR"
+        }
+      ]
+    },
+    {
+      "intent": "CalculateAtOnceIntent",
+      "slots": [
+        {
+          "name": "number_one",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "number_two",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "operator",
+          "type": "OPERATOR"
+        }
+      ]
+    },
+    {
+      "intent": "AnswerIntent"
+    },
+    {
+      "intent": "ClearIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}

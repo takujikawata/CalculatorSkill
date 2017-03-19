@@ -1,0 +1,27 @@
+{
+  "name": "calculate-skill-sample",
+  "version": "1.0.0",
+  "description": "calculation sample skill for Alexa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takujikawata/calculator-skill-sample.git"
+  },
+  "keywords": [
+    "Alexa",
+    "calculator",
+    "skill"
+  ],
+  "author": "Amazon.com",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/takujikawata/calculator-skill-sample.git/issues"
+  },
+  "homepage": "https://github.com/takujikawata/calculator-skill-sample.git#readme",
+  "dependencies": {
+    "alexa-sdk": "^1.0.7"
+  }
+}

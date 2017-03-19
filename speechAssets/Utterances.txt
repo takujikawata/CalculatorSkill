@@ -1,0 +1,15 @@
+CalculateOneNumberIntent {number}
+CalculateOneOperatorIntent {operator}
+CalculateNumberThenOperatorIntent {number} {operator}
+CalculateOperatorThenNumber {operator} {number}
+CalculateAtOnceIntent {number_one} {operator} {number_two}
+CalculateAtOnceIntent what is {number_one} {operator} {number_two}
+CalculateAtOnceIntent calculate {number_one} {operator} {number_two}
+AnswerIntent answer
+AnswerIntent give me the answer
+AnswerIntent result
+AnswerIntent give me the result
+ClearIntent clear
+ClearIntent clear the data
+ClearIntent clear the result
+ClearIntent clear the statement
