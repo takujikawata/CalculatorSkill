@@ -10,7 +10,7 @@ var instruction_detail = "Say number and operator, I'll calculate for you. <brea
                         + "The operator now I support is plus, minus, multiply and divided by.   <break time='1s'/>"
                         + "If you say one number or one operator each, I'll memory your command and by you saying <s>answer</s>, I'll calculate the result.  <break time='1s'/>"
                         + "You also can say one number and operator, like <s>two plus</s> or <s>plus two</s> I'll memory the command for further calculation. <break time='1s'/>"
-                        + "I keep memoring stetement and number for you. If you want to start from the beginning, please say <s>clear</s>";
+                        + "I keep memoring statement and number for you. If you want to start from the beginning, please say <s>clear</s>";
 
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
