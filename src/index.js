@@ -255,7 +255,7 @@ var lastInputIsNumberModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTISN
   "ClearIntent": function() {
     console.log("ClearIntent");
     this.handler.state = states.CLEAR;
-    this.emit(":ask", "I'm going to clear the holding value. Is it fine?",instruction);
+    this.emit(":ask", "I'm going to clear the holding statement. Is it fine?",instruction);
   },
   "AnswerIntent": function() {
     var statement = generateStatementString(this.attributes["numbers"], this.attributes["operators"]);
