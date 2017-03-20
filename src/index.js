@@ -5,12 +5,12 @@ var appId = "";
 
 var instruction = "Say number and operator. For getting answer, please say answer.";
 var instruction_for_clearing = "Say yes for clearing, say no for resume the calculation with the statement now I have";
-var instruction_detail = "Say number and operator, I'll calculate for you. <break time='1s'/>"
-                        + "If you say full statement like one plus five, I'll give you result immediately.  <break time='1s'/>"
-                        + "The operator now I support is plus, minus, multiply and divided by.   <break time='1s'/>"
-                        + "If you say one number or one operator each, I'll memory your command and by you saying <s>answer</s>, I'll calculate the result.  <break time='1s'/>"
-                        + "You also can say one number and operator, like <s>two plus</s> or <s>plus two</s> I'll memory the command for further calculation. <break time='1s'/>"
-                        + "I keep memoring statement and number for you. If you want to start from the beginning, please say <s>clear</s>";
+var instruction_detail = "Say number and operator, I'll calculate for you. <break time='0.8s'/>"
+                        + "If you say two numbers and one operator in between, like one plus five, I'll give you the result immediately.  <break time='0.8s'/>"
+                        + "The operator now I support is plus, minus, multiply and divided by.   <break time='0.8s'/>"
+                        + "If you say one number or one operator each, I'll memory your command and by you saying <s>answer</s>, I'll calculate the result.  <break time='0.8s'/>"
+                        + "You also can say one number and one operator in a command, like <s>two plus</s> or <s>plus two</s> I'll memory the command for further calculation. <break time='0.8s'/>"
+                        + "I keep memoring your command until you say answer. <break time='0.8s'/> If you want clear the memoried commands and want to start from the beginning, please say <s>clear</s>";
 
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
@@ -29,13 +29,13 @@ var states = {
 
 var newSessionHandlers = {
     "LaunchRequest": function() {
-      console.log("newSessionHandlers:LaunchRequest");
+      console.log("newSessionHandlers::newSessionHandlers:LaunchRequest");
       this.attributes["numbers"] = [];
       this.attributes["operators"] = [];
       this.emit(":ask", "Ok, please say number and operator",instruction);
     },
     "CalculateAtOnceIntent" : function() {
-      console.log("CalculateAtOnceIntent");
+      console.log("newSessionHandlers::CalculateAtOnceIntent");
       var n1 = parseInt(this.event.request.intent.slots.number_one.value);
       var n2 = parseInt(this.event.request.intent.slots.number_two.value);
       var op = translateOperator(this.event.request.intent.slots.operator.value);
@@ -50,7 +50,7 @@ var newSessionHandlers = {
       }
     },
     "CalculateOneNumberIntent" : function() {
-      console.log("CalculateOneNumberIntent");
+      console.log("newSessionHandlers::CalculateOneNumberIntent");
       var n = parseInt(this.event.request.intent.slots.number.value);
       if (isNaN(n)) {
         this.emit("Unhandled");
@@ -62,11 +62,11 @@ var newSessionHandlers = {
       }
     },
     "CalculateOneOperatorIntent" : function() {
-      console.log("CalculateOneOperatorIntent");
+      console.log("newSessionHandlers::CalculateOneOperatorIntent");
       this.emit(":ask", "Input was invalid. Please say number", instruction);
     },
     "CalculateNumberThenOperatorIntent" : function() {
-      console.log("CalculateNumberThenOperatorIntent");
+      console.log("newSessionHandlers::CalculateNumberThenOperatorIntent");
       var n = parseInt(this.event.request.intent.slots.number.value);
       if (isNaN(n)) {
         this.emit("Unhandled");
@@ -79,44 +79,45 @@ var newSessionHandlers = {
       }
     },
     "CalculateOperatorThenNumber" : function() {
-      console.log("CalculateOperatorThenNumber");
+      console.log("newSessionHandlers::CalculateOperatorThenNumber");
       this.emit(":ask", "Input was invalid. Please say number first.", instruction);
     },
     "AnswerIntent": function() {
-      console.log("AnswerIntent");
+      console.log("newSessionHandlers::AnswerIntent");
       this.emit(":ask", "Input was invalid. Please say number for continuing the calculation.",instruction);
     },
     "ClearIntent": function() {
-      console.log("ClearIntent");
+      console.log("newSessionHandlers::ClearIntent");
       this.handler.state = states.CLEAR;
       this.emit(":ask", "I'm going to clear the holding statement. Is it fine?",instruction);
     },
     "AMAZON.StopIntent": function() {
-      console.log("StopIntent");
+      console.log("newSessionHandlers::StopIntent");
       this.handler.state = states.INITIAL;
       this.attributes["numbers"] = [];
       this.attributes["operators"] = [];
       this.emit(":tell", "Goodbye!");
     },
     "AMAZON.CancelIntent": function() {
-      console.log("CancelIntent");
+      console.log("newSessionHandlers::CancelIntent");
       this.handler.state = states.INITIAL;
       this.attributes["numbers"] = [];
       this.attributes["operators"] = [];
       this.emit(":tell", "Goodbye!");
     },
     "AMAZON.HelpIntent":function() {
+      console.log("newSessionHandlers::HelpIntent");
       this.emit(":ask",instruction_detail,instruction);
     },
     "SessionEndedRequest": function () {
-      console.log("session ended!");
+      console.log("newSessionHandlers::SessionEndedRequest");
       this.handler.state = states.INITIAL;
       this.attributes["numbers"] = [];
       this.attributes["operators"] = [];
       this.emit(':saveState', true); // Be sure to call :saveState to persist your session attributes in DynamoDB
     },
     "Unhandled": function() {
-      console.log("UNHANDLED");
+      console.log("newSessionHandlers::UNHANDLED");
       var statement = translateStatementForSay(generateStatementString(this.attributes["numbers"], this.attributes["operators"]));
       if (statement.length > 0) {
         this.emit(":ask", "Could you say again? Current statement is " + statement, "Say number and operator. For getting answer, please say answer." );
@@ -129,53 +130,66 @@ var newSessionHandlers = {
 // TODO. Had this code because it seems one user can not go back to blank state..
 var initStateHandlers = Alexa.CreateStateHandler(states.INITIAL, {
     "LaunchRequest": function() {
+      console.log("initStateHandlers::newSessionHandlers:LaunchRequest");
       this.handler.state = '';
       this.emitWithState('LaunchRequest');
     },
     "CalculateAtOnceIntent" : function() {
+      console.log("initStateHandlers::CalculateAtOnceIntent");
       this.handler.state = '';
       this.emitWithState('CalculateAtOnceIntent');
     },
     "CalculateOneNumberIntent" : function() {
+      console.log("initStateHandlers::CalculateOneNumberIntent");
       this.handler.state = '';
       this.emitWithState('CalculateOneNumberIntent');
     },
     "CalculateOneOperatorIntent" : function() {
+      console.log("initStateHandlers::CalculateOneOperatorIntent");
       this.handler.state = '';
       this.emitWithState('CalculateOneOperatorIntent');
     },
     "CalculateNumberThenOperatorIntent" : function() {
+      console.log("initStateHandlers::CalculateNumberThenOperatorIntent");
       this.handler.state = '';
       this.emitWithState('CalculateNumberThenOperatorIntent');
     },
     "CalculateOperatorThenNumber" : function() {
+      console.log("initStateHandlers::CalculateOperatorThenNumber");
       this.handler.state = '';
       this.emitWithState('CalculateOperatorThenNumber');
     },
     "AnswerIntent": function() {
+      console.log("initStateHandlers::AnswerIntent");
       this.handler.state = '';
       this.emitWithState('AnswerIntent');
     },
     "ClearIntent": function() {
+      console.log("initStateHandlers::ClearIntent");
       this.handler.state = '';
       this.emitWithState('ClearIntent');
     },
     "AMAZON.StopIntent": function() {
+      console.log("initStateHandlers::StopIntent");
       this.handler.state = '';
       this.emitWithState('AMAZON.StopIntent');
     },
     "AMAZON.CancelIntent": function() {
+      console.log("initStateHandlers::CancelIntent");
       this.handler.state = '';
       this.emitWithState('AMAZON.CancelIntent');
     },
     "AMAZON.HelpIntent":function() {
+      console.log("initStateHandlers::HelpIntent");
       this.emit(":ask",instruction_detail,instruction);
     },
     "SessionEndedRequest": function () {
+      console.log("initStateHandlers::SessionEndedRequest");
       this.handler.state = '';
       this.emitWithState('SessionEndedRequest');
     },
     "Unhandled": function() {
+      console.log("initStateHandlers::Unhandled");
       this.handler.state = '';
       this.emitWithState('initStateHandlers::Unhandled');
     }
@@ -183,19 +197,11 @@ var initStateHandlers = Alexa.CreateStateHandler(states.INITIAL, {
 
 var lastInputIsNumberModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTISNUMBER, {
   "CalculateAtOnceIntent" : function() {
-    console.log("CalculateAtOnceIntent");
-    if (this.attributes["operators"].length == 0) {
-      // TODO: there may be better way.
-      // The call in this condition would be the first request after responding to an answer.
-      // Perform CalculateAtOnceIntent for this situation only.
-      this.handler.state = states.INITIAL;
-      this.emitWithState("CalculateAtOnceIntent");
-    } else {
-      this.emit(":ask", "Input was invalid. please say operator and then number for continuing the calculation.", "say operator or you need answer, please say answer");
-    }
+    console.log("lastInputIsNumberModeHandlers::CalculateAtOnceIntent");
+    this.emit(":ask", "Input was invalid. please say operator and then number for continuing the calculation.", "say operator or you need answer, please say answer");
   },
   "CalculateOneNumberIntent" : function() {
-    console.log("CalculateOneNumberIntent");
+    console.log("lastInputIsNumberModeHandlers::CalculateOneNumberIntent");
     var n = parseInt(this.event.request.intent.slots.number.value);
     if (isNaN(n)) {
       this.emit("Unhandled");
@@ -214,14 +220,14 @@ var lastInputIsNumberModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTISN
     }
   },
   "CalculateOneOperatorIntent" : function() {
-    console.log("CalculateOneOperatorIntent");
+    console.log("lastInputIsNumberModeHandlers::CalculateOneOperatorIntent");
     var op = translateOperator(this.event.request.intent.slots.operator.value);
     this.attributes["operators"].push(op);
     this.handler.state = states.LASTINPUTISOPERATOR;
     this.emit(":ask", "Ok",instruction);
   },
   "CalculateNumberThenOperatorIntent" : function() {
-    console.log("CalculateNumberThenOperatorIntent");
+    console.log("lastInputIsNumberModeHandlers::CalculateNumberThenOperatorIntent");
     var n = parseInt(this.event.request.intent.slots.number.value);
     if (isNaN(n)) {
       this.emit("Unhandled");
@@ -240,7 +246,7 @@ var lastInputIsNumberModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTISN
     this.emit(":ask", "Ok",instruction);
   },
   "CalculateOperatorThenNumber" : function() {
-    console.log("CalculateOperatorThenNumber");
+    console.log("lastInputIsNumberModeHandlers::CalculateOperatorThenNumber");
     var op = translateOperator(this.event.request.intent.slots.operator.value);
     var n = parseInt(this.event.request.intent.slots.number.value);
     if (isNaN(n)) {
@@ -253,13 +259,13 @@ var lastInputIsNumberModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTISN
     }
   },
   "ClearIntent": function() {
-    console.log("ClearIntent");
+    console.log("lastInputIsNumberModeHandlers::ClearIntent");
     this.handler.state = states.CLEAR;
     this.emit(":ask", "I'm going to clear the holding statement. Is it fine?",instruction);
   },
   "AnswerIntent": function() {
+    console.log("lastInputIsNumberModeHandlers::AnswerIntent");
     var statement = generateStatementString(this.attributes["numbers"], this.attributes["operators"]);
-    console.log("statement:" + statement);
     if (this.attributes["operators"].length == 0) {
       this.emit(":ask", "Input is not complete. please say at least one operator for the calculation. Current statement is " + statement,
         instruction);
@@ -275,17 +281,21 @@ var lastInputIsNumberModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTISN
     }
   },
   "AMAZON.StopIntent": function() {
+    console.log("lastInputIsNumberModeHandlers::StopIntent");
     this.handler.state = states.INITIAL;
     this.emitWithState('AMAZON.StopIntent');
   },
   "AMAZON.CancelIntent": function() {
+    console.log("lastInputIsNumberModeHandlers::CancelIntent");
     this.handler.state = states.INITIAL;
     this.emitWithState('AMAZON.CancelIntent');
   },
   "AMAZON.HelpIntent":function() {
+    console.log("lastInputIsNumberModeHandlers::HelpIntent");
     this.emit(":ask",instruction_detail,instruction);
   },
   "SessionEndedRequest": function () {
+    console.log("lastInputIsNumberModeHandlers::SessionEndedRequest");
     this.handler.state = states.INITIAL;
     this.emitWithState('SessionEndedRequest');
   },
@@ -302,7 +312,7 @@ var lastInputIsNumberModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTISN
 
 var lastInputIsOperatorModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTISOPERATOR, {
   "CalculateAtOnceIntent" : function() {
-    console.log("CalculateAtOnceIntent");
+    console.log("lastInputIsOperatorModeHandlers::CalculateAtOnceIntent");
     var n1 = parseInt(this.event.request.intent.slots.number_one.value);
     var n2 = parseInt(this.event.request.intent.slots.number_two.value);
     var op = translateOperator(this.event.request.intent.slots.operator.value);
@@ -317,7 +327,7 @@ var lastInputIsOperatorModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTI
     }
   },
   "CalculateOneNumberIntent" : function() {
-    console.log("CalculateOneNumberIntent");
+    console.log("lastInputIsOperatorModeHandlers::CalculateOneNumberIntent");
     var n = parseInt(this.event.request.intent.slots.number.value);
     if (isNaN(n)) {
       this.emit("Unhandled");
@@ -328,11 +338,11 @@ var lastInputIsOperatorModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTI
     }
   },
   "CalculateOneOperatorIntent" : function() {
-    console.log("CalculateOneOperatorIntent");
+    console.log("lastInputIsOperatorModeHandlers::CalculateOneOperatorIntent");
     this.emit(":ask", "input was invalid. please say number for continuing the calculation.",instruction);
   },
   "CalculateNumberThenOperatorIntent" : function() {
-    console.log("CalculateNumberThenOperatorIntent");
+    console.log("lastInputIsOperatorModeHandlers::CalculateNumberThenOperatorIntent");
     var n = parseInt(this.event.request.intent.slots.number.value);
     var op = translateOperator(this.event.request.intent.slots.operator.value);
     if (isNaN(n)) {
@@ -345,30 +355,34 @@ var lastInputIsOperatorModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTI
     }
   },
   "CalculateOperatorThenNumber" : function() {
-    console.log("CalculateOperatorThenNumber");
+    console.log("lastInputIsOperatorModeHandlers::CalculateOperatorThenNumber");
     this.emit(":ask", "input was invalid. please say number for continuing the calculation.",instruction);
   },
   "AnswerIntent": function() {
-    console.log("AnswerIntent");
+    console.log("lastInputIsOperatorModeHandlers::AnswerIntent");
     this.emit(":ask", "input was invalid. please say number for continuing the calculation.",instruction);
   },
   "ClearIntent": function() {
-    console.log("ClearIntent");
+    console.log("lastInputIsOperatorModeHandlers::ClearIntent");
     this.handler.state = states.CLEAR;
     this.emit(":ask", "I'm going to clear the holding value. Is it fine?",instruction);
   },
   "AMAZON.StopIntent": function() {
+    console.log("lastInputIsOperatorModeHandlers::StopIntent");
     this.handler.state = states.INITIAL;
     this.emitWithState('AMAZON.StopIntent');
   },
   "AMAZON.CancelIntent": function() {
+    console.log("lastInputIsOperatorModeHandlers::CancelIntent");
     this.handler.state = states.INITIAL;
     this.emitWithState('AMAZON.CancelIntent');
   },
   "AMAZON.HelpIntent":function() {
+    console.log("lastInputIsOperatorModeHandlers::HelpIntent");
     this.emit(":ask",instruction_detail,instruction);
   },
   "SessionEndedRequest": function () {
+    console.log("lastInputIsOperatorModeHandlers::SessionEndedRequest");
     this.handler.state = states.INITIAL;
     this.emitWithState('SessionEndedRequest');
   },
@@ -385,12 +399,14 @@ var lastInputIsOperatorModeHandlers = Alexa.CreateStateHandler(states.LASTINPUTI
 
 var clearModeHandlers = Alexa.CreateStateHandler(states.CLEAR, {
   'AMAZON.YesIntent': function() {
+    console.log("clearModeHandlers::AMAZON.YesIntent");
     this.attributes["numbers"] = [];
     this.attributes["operators"] = [];
     this.handler.state = states.INITIAL;
     this.emit(":ask", "Ok. I removed the holding calculation statement", instruction);
   },
   'AMAZON.NoIntent': function() {
+    console.log("clearModeHandlers::AMAZON.NoIntent");
     if (this.attributes["numbers"].length == this.attributes["operators"].length) {
       this.handler.state = states.LASTINPUTISOPERATOR;
     } else {
@@ -399,18 +415,22 @@ var clearModeHandlers = Alexa.CreateStateHandler(states.CLEAR, {
     this.emit(":ask", "Ok. I hold current value", instruction);
   },
   "AMAZON.StopIntent": function() {
+    console.log("clearModeHandlers::StopIntent");
     this.handler.state = states.INITIAL;
     this.emitWithState('AMAZON.StopIntent');
   },
   "AMAZON.CancelIntent": function() {
+    console.log("clearModeHandlers::CancelIntent");
     this.handler.state = states.INITIAL;
     this.emitWithState('AMAZON.CancelIntent');
   },
   "SessionEndedRequest": function () {
+    console.log("clearModeHandlers::SessionEndedRequest");
     this.handler.state = states.INITIAL;
     this.emitWithState('SessionEndedRequest');
   },
   "AMAZON.HelpIntent":function() {
+    console.log("clearModeHandlers::HelpIntent");
     this.emit(":ask",instruction_detail,instruction);
   },
   "Unhandled": function() {
@@ -425,7 +445,6 @@ function doCalculate(statement) {
 };
 
 function appendNewNumber(original, appendingNumber) {
-  console.log("appendNewNumber original:" + original + "   appendingNumber:" + appendingNumber);
   if (appendingNumber >= 0) {
     var shiftValue = 0;
     if (appendingNumber == 0) {
@@ -433,7 +452,6 @@ function appendNewNumber(original, appendingNumber) {
     } else {
       shiftValue = Math.floor(Math.log10(appendingNumber)) + 1;
     }
-    console.log("appendNewNumber shiftValue:" + shiftValue);
     return original * Math.pow(10,shiftValue) + appendingNumber;
   } else {
     throw new Error("Invalid value");
