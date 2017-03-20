@@ -32,9 +32,10 @@ About the sdk and the installation process for the skills, please see:
 https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs
 
 ## Note
-Using the standard feature of the SDK, this skill uses dynamoDB for the persistent strage.  
-To make the feature available, you have to have permission for the role set to the lambda function.
-To modify the permission for a role, you have have to visit AWS console's IAM role setting:
+This skill uses dynamoDB for the persistent strage.  
+To make dynamoDB available for your skill, you have to have the access permission for your lambda function.
+The permission is controlled by the role assigned to the lambda function. 
+To modify the permission for a role, you may have to visit AWS console's IAM role setting:
 
 https://console.aws.amazon.com/iam/home#/roles
 
