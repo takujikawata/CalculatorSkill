@@ -1,6 +1,6 @@
 # calculator-skill-sample
 
-## About
+## About:
 This is a sample Amazon alexa skill for excercing the alexa-sdk for Node.js.  
 This skill calculate numbers given by user.  
 If you say statement like 1 + 5, Alexa'll give the result immediately.  
@@ -24,7 +24,7 @@ Example of the interaction:
   * User: Answer  
   * Alexa: 12 divided by 3 is 4  
  
-## How to set up the skill.
+## How to set up the skill:
 This sample uses alexa-sdk for Node.js and can run on AWS lambda function.
 About the sdk and the instllation instruction for the skills uses the sdk, please see:
 https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs
@@ -36,6 +36,6 @@ To modify the permission for a role, you have have to visit AWS console's IAM ro
 
 https://console.aws.amazon.com/iam/home#/roles
 
-## Lisence
+## Lisence:
 This sample code is provided unser Apache License Version 2.0. For detail, please see: https://github.com/takujikawata/calculator-skill-sample/blob/master/LICENSE.txt
 
