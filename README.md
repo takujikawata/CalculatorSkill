@@ -11,9 +11,11 @@ Alexa keep memoring statement and number. If user want to start from the beginni
 
 Example of the interaction:  
 
-  * User: 1+2  
+  * User: 1+3  
   * Alexa: 1+3 is 4  
-  * User: + 4  
+  * User: +
+  * Alexa: Ok
+  * User: 4  
   * Alexa: Ok  
   * User: multiply 2  
   * Alexa: Ok  
@@ -26,7 +28,7 @@ Example of the interaction:
  
 ## How to set up the skill
 This sample uses alexa-sdk for Node.js and can run on AWS lambda function.
-About the sdk and the instllation instruction for the skills uses the sdk, please see:
+About the sdk and the installation process for the skills, please see:
 https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs
 
 ## Note
