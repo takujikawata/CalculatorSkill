@@ -3,8 +3,8 @@
 ## About
 This is a sample Amazon alexa skill for excercing the alexa-sdk for Node.js.  
 This skill calculate numbers given by user.  
-If you say full statement like 1 + 5, Alexa'll give the result immediately.  
-The operator now I support is "plus", "minus", "multiply" and "divided by".  
+If you say statement like 1 + 5, Alexa'll give the result immediately.  
+The operator now this skill support is "plus", "minus", "multiply" and "divided by".  
 If you say one number or one operator each, Alexa'll memory the command and by you saying "Answer", Alexa'll calculate the result and memorize the result for the further calculation.  
 User also can say one number and operator, like 2 + or + 2, Alexa'll memory the command for further calculation.   
 Alexa keep memoring statement and number. If user want to start from the beginning, user say "clear" for clearing the holding statement.  
